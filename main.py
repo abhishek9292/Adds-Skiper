@@ -12,6 +12,7 @@ import win32con
 import win32gui
 import ctypes
 from ctypes import wintypes
+import logging
 
 # For system tray icon
 import pystray
@@ -56,17 +57,24 @@ class ButtonClicker:
     
     def find_button(self, button_image):
         """Find a button on the screen.""" 
-        screenshot = np.array(ImageGrab.grab())
-        screenshot = cv2.cvtColor(screenshot, cv2.COLOR_RGB2BGR) 
-        result = cv2.matchTemplate(screenshot, button_image, cv2.TM_CCOEFF_NORMED)
-        min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
-        
-        if max_val >= self.confidence: 
-            h, w = button_image.shape[:-1]
-            center_x = max_loc[0] + w // 2
-            center_y = max_loc[1] + h // 2
-            return (center_x, center_y)
-        
+        try:
+            screenshot = np.array(ImageGrab.grab())
+            screenshot = cv2.cvtColor(screenshot, cv2.COLOR_RGB2BGR) 
+            result = cv2.matchTemplate(screenshot, button_image, cv2.TM_CCOEFF_NORMED)
+            min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
+            
+            if max_val >= self.confidence: 
+                h, w = button_image.shape[:-1]
+                center_x = max_loc[0] + w // 2
+                center_y = max_loc[1] + h // 2
+                return (center_x, center_y)
+        except Exception as e:
+            print(f"find_button Error : {e}")
+            self.paused = not self.paused
+            status = "Paused" if self.paused else "Resumed"
+            print(status)
+            if self.tray_icon:
+                self.update_tray_tooltip(f"clicker - {status}")
         return None
     
     def click_button(self, position):
@@ -247,7 +255,32 @@ class ButtonClicker:
             if self.tray_icon:
                 self.tray_icon.stop()
 
+def log_exception(exc_type, exc_value, exc_traceback):
+    """Global exception handler."""
+    if issubclass(exc_type, KeyboardInterrupt):
+        # Allow Ctrl+C to exit without logging
+        sys.__excepthook__(exc_type, exc_value, exc_traceback)
+        return
+    
+    # Log exception with traceback
+    logging.error(
+        "Uncaught exception",
+        exc_info=(exc_type, exc_value, exc_traceback)
+    )
+
 if __name__ == "__main__":
+    log_dir = "logs"
+    from datetime import datetime
+    today_date = datetime.now().strftime("%Y-%m-%d")
+    if not os.path.exists(log_dir):
+        os.makedirs(log_dir)
+    logging.basicConfig(
+        filename=f"logs/error_log-{today_date}.txt",   # log file
+        level=logging.ERROR,
+        format="%(asctime)s [%(levelname)s] %(message)s",
+    )
+    # Set global exception handler
+    sys.excepthook = log_exception
     # Configuration
     BUTTON_IMAGES_FOLDER = "button_images"   
     CONFIDENCE_LEVEL = 0.8  

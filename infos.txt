@@ -11,7 +11,7 @@ pip freeze > requirements.txt
     ```
 - **Build with a custom icon:**
     ```sh
-    pyinstaller --onefile --windowed --icon=app.ico --name "Skip Clicker" main.py
+    pyinstaller --onefile --windowed --icon=app3.ico --name "Auto Button Clicker" main.py
     ```
 
     pyinstaller --onefile --windowed --add-data "assets;assets" --icon=app.ico --name "Skip Clicker" main.py
