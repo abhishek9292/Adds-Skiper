@@ -5,14 +5,7 @@ pip install -r requirements.txt
 pip freeze > requirements.txt
 
 
-- **Basic build:**
+- **Build :**
     ```sh
-    pyinstaller --windowed main.py 
+    pyinstaller --onefile --windowed --noupx --version-file=file_version.txt --icon=app.ico --name "Auto Button Clicker" main.py
     ```
-- **Build with a custom icon:**
-    ```sh
-    pyinstaller --onefile --windowed --icon=app3.ico --name "Auto Button Clicker" main.py
-    ```
-
-    pyinstaller --onefile --windowed --add-data "assets;assets" --icon=app.ico --name "Skip Clicker" main.py
-         pip install pyinstaller
