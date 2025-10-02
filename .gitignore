@@ -6,4 +6,6 @@ __pycache__/
 *.spec
 /build
 /logs
-/dist/logs
+dist/
+/dist
+/dist/

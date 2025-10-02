@@ -7,5 +7,18 @@ pip freeze > requirements.txt
 
 - **Build :**
     ```sh
-    pyinstaller --onefile --windowed --noupx --version-file=file_version.txt --icon=app.ico --name "Auto Button Clicker" main.py
+    pyinstaller --onefile --windowed --add-data "button_images;button_images" --clean --noupx --version-file=file_version.txt --icon=app.ico --name "Auto Button Clicker" main_taskbar.py
     ```
+
+ --onefile 
+ --onedir 
+ --console 
+ --noconsole
+ --debug=all
+ --clean 
+ --noupx
+
+ --windowed  
+ --icon=app.ico 
+ --name "MyApp" 
+ --version-file=file_version.txt 
