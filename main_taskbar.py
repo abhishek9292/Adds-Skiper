@@ -180,7 +180,8 @@ class ControlUI:
             
     def on_close(self):
         """Handle window close event."""
-        self.root.withdraw()  # Hide window instead of destroying
+        #self.root.withdraw()  # Hide window instead of destroying
+        self.quit_app()
         
     def quit_app(self):
         """Properly quit the application."""
